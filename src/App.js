@@ -1,25 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import "./App.css";
 
 function App() {
+  const [posts, setPosts] = useState(null);
+
+  useEffect(() => {
+    axios
+      .get("https://jsonplaceholder.typicode.com/posts")
+      .then((response) => setPosts(response.data));
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+      <div className="row">
+        <div className="col-md-12 text-center" style={{ margin: "50px 0" }}>
+          <h1>
+            {" "}
+            Fake <i>100</i> Posts from JSON Placeholder
+          </h1>
+        </div>
+      </div>
+      <div className="row">
+        {posts &&
+          posts.map((post) => (
+            <div className="card col-md-4">
+              <div className="card-body">
+                <h5 className="card-title">{post.title}</h5>
+                <p className="card-text">{post.body}</p>
+              </div>
+            </div>
+          ))}
+      </div>
     </div>
   );
 }
+// From the snippet above, once our application loads, we send a GET HTTP request to the API to retrieve the list of posts and render it within the view.
 
 export default App;
