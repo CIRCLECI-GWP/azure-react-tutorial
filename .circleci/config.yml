@@ -1,0 +1,17 @@
+version: '2.1'
+orbs:
+  azure-cli: circleci/azure-cli@1.2.2
+jobs:
+  install-login:
+    executor: azure-cli/azure-docker
+    steps:
+      - azure-cli/install
+      - azure-cli/login-with-service-principal
+      - run:
+          name: "Get deployment configuration details of the Azure web app"
+          command: |
+            az webapp deployment source show --resource-group demo --name azure-react-tutorial
+workflows:
+  deploy:
+    jobs:
+      - install-login
