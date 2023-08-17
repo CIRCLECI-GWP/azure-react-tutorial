@@ -2,7 +2,7 @@ version: '2.1'
 orbs:
   azure-cli: circleci/azure-cli@1.2.2
 jobs:
-  install-login:
+  install-login-git-deploy:
     executor: azure-cli/azure-docker
     steps:
       - azure-cli/install
@@ -11,7 +11,14 @@ jobs:
           name: "Get deployment configuration details of the Azure web app"
           command: |
             az webapp deployment source show --resource-group demo --name azure-react-tutorial
+      - checkout
+      - run:
+          name: "Deploy Web App to Azure"
+          command: |
+            git remote add azure https://$GIT_USERNAME:$GIT_PASSWORD@azure-react-tutorial.scm.azurewebsites.net/azure-react-tutorial.git
+            git branch -m master
+            git push azure master --force
 workflows:
   deploy:
     jobs:
-      - install-login
+      - install-login-git-deploy
